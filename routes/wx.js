@@ -17,4 +17,26 @@ router.get('/', function(req, res, next) {
   }
 });
 
+const genConfig = (url) => {
+  const ticket = '';
+  const nonceStr = '';
+  const timestamp = parseInt(new Date().getTime() / 10000) + '';
+  const appId = '';
+  const str = `jsapi_ticket=${ticket}&noncestr=${nonceStr}&timestamp=${timestamp}&url=${url}`;
+  const signature = sha1(str);
+  return {signature, nonceStr, appId, timestamp };
+}
+
+router.get('/config', function(req, res, next) {
+  const params = req.query;
+  if (!params || !params.url) return;
+  const {signature, nonceStr, appId, timestamp} = genConfig(params.url);
+  res.send({
+    signature,
+    nonceStr,
+    appId,
+    timestamp,
+  })
+});
+
 module.exports = router;
